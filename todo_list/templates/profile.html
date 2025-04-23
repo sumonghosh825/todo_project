@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile{% endblock %}
+{% block page_title %}Profile{% endblock %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <!-- Top Profile Card -->
+    <div class="card text-center mx-auto" style="max-width: 900px;">
+        <div class="card-body">
+            <div class="d-flex align-items-center">
+                <!-- Profile Image on the Left -->
+                <div class="me-3">
+                    <img src="{% static 'images/1.png' %}" alt="Profile Picture" class="rounded-circle" width="120" height="120">
+                </div>
+
+                <!-- User Details on the Right -->
+                <div>
+                    <h4 class="mb-1">{{ user.username }}</h4>
+                    <p class="text-muted mb-0">{{ user.email }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button id="profileBtn" class="btn btn-primary">Profile</button>
+            <button id="securityBtn" class="btn btn-secondary">Security</button>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#profileModal" id="editProfileBtn">Edit Profile</button>
+        </div>
+    </div>
+
+    <!-- Dynamic Content Card -->
+    <div id="contentCard" class="card mx-auto mt-3" style="max-width: 600px;">
+        <div class="card-body" id="dynamicContent">
+            <!-- Profile content will be loaded here -->
+        </div>
+    </div>
+</div>
+
+<!-- Profile Modal -->
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="modalContent">
+            <!-- Profile modal content will be loaded here -->
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        function loadContent(type) {
+            let url = "";
+            if (type === "profile") {
+                url = "{% url 'load_profile_content' %}";
+            } else if (type === "security") {
+                url = "{% url 'load_security_content' %}";
+            }
+    
+            fetch(url)
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("dynamicContent").innerHTML = data;
+            })
+            .catch(error => console.error("Error loading content:", error));
+        }
+    
+        // Load Profile section
+        document.getElementById("profileBtn").addEventListener("click", function() {
+            loadContent("profile");
+        });
+    
+        // Load Security section
+        document.getElementById("securityBtn").addEventListener("click", function() {
+            loadContent("security");
+        });
+    
+        // Load Profile Modal Content
+        document.getElementById("editProfileBtn").addEventListener("click", function() {
+            fetch("#")  // Correct Django route
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("modalContent").innerHTML = data;
+            })
+            .catch(error => console.error("Error loading modal content:", error));
+        });
+    
+        // Load profile content by default
+        loadContent("profile");
+    });
+    
+</script>
+
+
+{% endblock %}

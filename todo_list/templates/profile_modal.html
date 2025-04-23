@@ -1,0 +1,62 @@
+
+{% load static %}
+<div class="container mt-4">
+    <!-- Profile Display Card -->
+    <div class="card p-4 shadow-lg">
+        <div class="d-flex align-items-center">
+            <div class="me-3">
+            </div>
+            <div>
+                <h4 class="mb-1">{{ profile.full_name }}</h4>
+                <p class="text-muted mb-0">{{ user.email }}</p>
+                <p class="mb-0"><strong>Phone:</strong> {{ profile.phone_number }}</p>
+                <p class="mb-0"><strong>Gender:</strong> {{ profile.gender }}</p>
+                <p class="mb-0"><strong>Bio:</strong> {{ profile.bio }}</p>
+                <p class="mb-0"><strong>Hobbies:</strong> {{ profile.hobbies }}</p>
+            </div>
+        </div>
+        <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#profileModal">Edit Profile</button>
+    </div>
+</div>
+
+<!-- Profile Edit Modal -->
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="profileModalLabel">Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="profileForm" method="POST" action="{% url 'update_profile' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="full_name" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="full_name" name="full_name" value="{{ profile.full_name }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone_number" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{ profile.phone_number }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="gender" class="form-label">Gender</label>
+                        <select class="form-control" id="gender" name="gender">
+                            <option value="Male" {% if profile.gender == 'Male' %}selected{% endif %}>Male</option>
+                            <option value="Female" {% if profile.gender == 'Female' %}selected{% endif %}>Female</option>
+                            <option value="Other" {% if profile.gender == 'Other' %}selected{% endif %}>Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="bio" class="form-label">Bio</label>
+                        <textarea class="form-control" id="bio" name="bio">{{ profile.bio }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="hobbies" class="form-label">Hobbies</label>
+                        <input type="text" class="form-control" id="hobbies" name="hobbies" value="{{ profile.hobbies }}">
+                    </div>
+                    <button type="submit" class="btn btn-success">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
